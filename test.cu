@@ -17,12 +17,14 @@ __global__ void kernel(int* gdata)
 	__syncthreads();
 
 	// do reduction in shared mem
-	for(unsigned int s=1; s < DATA_NUM; s *= 2) {
-		if(tid % (2*s) == 0) {
+	for(unsigned int s=DATA_NUM/2; s >= 1; s /= 2) {
+		if(tid < s) {
 			sdata[tid] += sdata[tid + s];
 		}
 		__syncthreads();
 	}
+
+	if(tid == 0) gdata[0] = sdata[0];
 }
 
 int main(int argc, char **argv)

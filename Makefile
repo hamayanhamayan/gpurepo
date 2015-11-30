@@ -223,15 +223,15 @@ all: build
 build: a.out
 
 test.o: test.cu
-  $(EXEC) $(NVCC) $(INCLUDES) $(ALL_CCFLAGS) $(GENCODE_FLAGS) -o $@ -c $<
+	$(EXEC) $(NVCC) $(INCLUDES) $(ALL_CCFLAGS) $(GENCODE_FLAGS) -o $@ -c $<
 
 a.out: test.o
-  $(EXEC) $(NVCC) $(ALL_LDFLAGS) $(GENCODE_FLAGS) -o $@ $+ $(LIBRARIES)
+	$(EXEC) $(NVCC) $(ALL_LDFLAGS) $(GENCODE_FLAGS) -o $@ $+ $(LIBRARIES)
 
 run: build
-  $(EXEC) ./a.out
+	$(EXEC) ./a.out
 
 clean:
-  rm -f a.out test.o
+	rm -f a.out test.o
 
 clobber: clean
