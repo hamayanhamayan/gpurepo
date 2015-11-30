@@ -6,7 +6,7 @@
 //#define NUM_BLOCKS 4
 #define NUM_THREADS 512
 
-#define DATA_NUM 1024
+#define DATA_NUM 512
 
 __global__ void kernel(int* gdata)
 {
@@ -16,15 +16,7 @@ __global__ void kernel(int* gdata)
 	sdata[tid] = gdata[tid];
 	__syncthreads();
 
-	// do reduction in shared mem
-	for(unsigned int s=DATA_NUM/2; s >= 1; s /= 2) {
-		if(tid < s) {
-			sdata[tid] += sdata[tid + s];
-		}
-		__syncthreads();
-	}
-
-	if(tid == 0) gdata[0] = sdata[0];
+	sdata[tid] *= sdata[0];
 }
 
 int main(int argc, char **argv)
@@ -40,7 +32,7 @@ int main(int argc, char **argv)
 
 	checkCudaErrors( cudaMemcpy(sdata, gdata, sizeof(int) * DATA_NUM, cudaMemcpyDeviceToHost) );
 
-	printf("1～%dの総和→%d\n", DATA_NUM, sdata[0]);
+	printf("1～%dの総和→%d\n", DATA_NUM, sdata[1]);
 
 	cudaFree(gdata);
 	free(sdata);
