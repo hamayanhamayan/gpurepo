@@ -14,7 +14,6 @@ __global__ void kernel(int* gdata)
 
 	unsigned int tid = blockIdx.x * blockDim.x + threadIdx.x;
 	sdata[tid] = gdata[tid];
-	__syncthreads();
 
 	sdata[tid] *= sdata[0];
 }
